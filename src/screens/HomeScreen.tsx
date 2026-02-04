@@ -189,6 +189,47 @@ export default function HomeScreen() {
         ))}
       </View>
 
+      {/* About & Contact */}
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: colors.text, marginBottom: 16 }]}>
+          Learn More
+        </Text>
+      </View>
+      <TouchableOpacity
+        style={[styles.aboutCard, { backgroundColor: colors.card, borderColor: colors.border }]}
+        onPress={() => navigation.navigate('More', { screen: 'About' })}
+        activeOpacity={0.85}
+      >
+        <View style={[styles.aboutIconWrap, { backgroundColor: colors.primary + '20' }]}>
+          <Icon name="domain" size={32} color={colors.primary} />
+        </View>
+        <View style={styles.aboutContent}>
+          <Text style={[styles.aboutTitle, { color: colors.text }]}>About Us</Text>
+          <Text style={[styles.aboutDesc, { color: colors.textSecondary }]}>
+            Our mission, values & 30+ years of excellence in luxury real estate
+          </Text>
+        </View>
+        <Icon name="chevron-right" size={24} color={colors.primary} />
+      </TouchableOpacity>
+
+      {/* Contact */}
+      <TouchableOpacity
+        style={[styles.aboutCard, { backgroundColor: colors.card, borderColor: colors.border }]}
+        onPress={() => navigation.navigate('More', { screen: 'Contact' })}
+        activeOpacity={0.85}
+      >
+        <View style={[styles.aboutIconWrap, { backgroundColor: colors.primary + '20' }]}>
+          <Icon name="email-outline" size={32} color={colors.primary} />
+        </View>
+        <View style={styles.aboutContent}>
+          <Text style={[styles.aboutTitle, { color: colors.text }]}>Get in Touch</Text>
+          <Text style={[styles.aboutDesc, { color: colors.textSecondary }]}>
+            Have questions? Reach out—we'd love to hear from you
+          </Text>
+        </View>
+        <Icon name="chevron-right" size={24} color={colors.primary} />
+      </TouchableOpacity>
+
       {/* CTA */}
       <View style={[styles.cta, { backgroundColor: colors.primary + '15', borderColor: colors.primary + '40' }]}>
         <Text style={[styles.ctaTitle, { color: colors.text }]}>Ready to invest?</Text>
@@ -252,7 +293,7 @@ const styles = StyleSheet.create({
   sectionTitle: { fontSize: 22, fontWeight: '700' },
   seeAll: { flexDirection: 'row', alignItems: 'center' },
   seeAllText: { fontSize: 15, fontWeight: '600', marginRight: 4 },
-  featuredScroll: { paddingRight: 20 },
+  featuredScroll: { paddingRight: 20, paddingBottom: 20 },
   empty: {
     padding: 40,
     alignItems: 'center',
@@ -296,6 +337,26 @@ const styles = StyleSheet.create({
   stepContent: { flex: 1 },
   stepTitle: { fontSize: 16, fontWeight: '700', marginBottom: 2 },
   stepDesc: { fontSize: 14 },
+  aboutCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 20,
+    marginBottom: 16,
+    padding: 20,
+    borderRadius: 16,
+    borderWidth: 1,
+  },
+  aboutIconWrap: {
+    width: 56,
+    height: 56,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 18,
+  },
+  aboutContent: { flex: 1 },
+  aboutTitle: { fontSize: 18, fontWeight: '700', marginBottom: 6 },
+  aboutDesc: { fontSize: 14, lineHeight: 20 },
   cta: {
     margin: 20,
     padding: 24,

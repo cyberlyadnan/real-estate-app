@@ -14,12 +14,36 @@ import HomeScreen from '../screens/HomeScreen';
 import PropertiesScreen from '../screens/PropertiesScreen';
 import PropertyDetailScreen from '../screens/PropertyDetailScreen';
 import AdminScreen from '../screens/AdminScreen';
+import MoreScreen from '../screens/MoreScreen';
+import AboutScreen from '../screens/AboutScreen';
+import ContactScreen from '../screens/ContactScreen';
+import SettingsScreen from '../screens/SettingsScreen';
 import { useTheme } from '../contexts/ThemeContext';
 
 const WELCOME_KEY = '@real_estate_has_seen_welcome';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+
+function MoreStack() {
+  const { colors } = useTheme();
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: colors.bg },
+        headerTintColor: colors.text,
+        headerShadowVisible: false,
+        headerBackTitle: 'Back',
+      }}
+    >
+      <Stack.Screen name="MoreMain" component={MoreScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="About" component={AboutScreen} options={{ title: 'About Us' }} />
+      <Stack.Screen name="Contact" component={ContactScreen} options={{ title: 'Contact' }} />
+      <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: 'Settings' }} />
+      <Stack.Screen name="Admin" component={AdminScreen} options={{ title: 'Admin Login' }} />
+    </Stack.Navigator>
+  );
+}
 
 function MainTabs() {
   const { colors } = useTheme();
@@ -31,7 +55,7 @@ function MainTabs() {
           const icons: Record<string, string> = {
             Home: focused ? 'home' : 'home-outline',
             Properties: focused ? 'view-grid' : 'view-grid-outline',
-            Admin: focused ? 'shield-account' : 'shield-account-outline',
+            More: focused ? 'menu' : 'menu',
           };
           return <Icon name={icons[route.name] || 'circle'} size={size} color={color} />;
         },
@@ -40,8 +64,13 @@ function MainTabs() {
         tabBarStyle: {
           backgroundColor: colors.card,
           borderTopColor: colors.border,
+          borderTopWidth: 1,
+          height: 60,
+          paddingBottom: 8,
+          paddingTop: 8,
         },
-        tabBarLabelStyle: { fontWeight: '500', fontSize: 12 },
+        tabBarLabelStyle: { fontWeight: '600', fontSize: 12 },
+        tabBarShowLabel: true,
         headerStyle: { backgroundColor: colors.bg },
         headerTintColor: colors.text,
         headerShadowVisible: false,
@@ -58,9 +87,9 @@ function MainTabs() {
         options={{ title: 'Properties', headerShown: false }}
       />
       <Tab.Screen
-        name="Admin"
-        component={AdminScreen}
-        options={{ title: 'Admin' }}
+        name="More"
+        component={MoreStack}
+        options={{ title: 'More', headerShown: false }}
       />
     </Tab.Navigator>
   );
