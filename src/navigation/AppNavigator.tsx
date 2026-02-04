@@ -108,6 +108,7 @@ export default function AppNavigator() {
           headerTintColor: colors.text,
           headerTitle: '',
           headerBackTitle: 'Back',
+          headerShadowVisible: false,
         }}
       />
     </Stack.Navigator>

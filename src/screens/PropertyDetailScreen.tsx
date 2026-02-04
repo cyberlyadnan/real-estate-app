@@ -2,7 +2,7 @@
  * Property Detail Screen - Full property data, professional design
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -17,11 +17,16 @@ import {
   TextInput,
   Alert,
   KeyboardAvoidingView,
+  FlatList,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Video from 'react-native-video';
 import { useTheme } from '../contexts/ThemeContext';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { fetchPropertyBySlug, getUploadBase } from '../api/properties';
+import { fetchPropertyBySlug } from '../api/properties';
+import { getUploadBase } from '../api/config';
 import { submitQuery } from '../api/queries';
 import type { PropertyDetail } from '../api/properties';
 
@@ -70,6 +75,12 @@ export default function PropertyDetailScreen() {
   const [imageIndex, setImageIndex] = useState(0);
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
   const [submitting, setSubmitting] = useState(false);
+  const imageListRef = useRef<FlatList>(null);
+
+  const onImageScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const i = Math.round(e.nativeEvent.contentOffset.x / width);
+    if (i >= 0 && i !== imageIndex) setImageIndex(i);
+  };
 
   useEffect(() => {
     if (!slug) {
@@ -150,6 +161,7 @@ export default function PropertyDetailScreen() {
   const images = property.images?.length ? property.images : [property.image];
   const loc = property.locationFull || {};
   const det = property.details || {};
+  const videos = property.videos || [];
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
@@ -158,32 +170,31 @@ export default function PropertyDetailScreen() {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        {/* Hero gallery */}
+        {/* Swipeable image gallery */}
         <View style={styles.galleryWrap}>
-          <Image
-            source={{ uri: images[imageIndex] || property.image }}
-            style={styles.mainImage}
-            resizeMode="cover"
+          <FlatList
+            ref={imageListRef}
+            data={images}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            onScroll={onImageScroll}
+            scrollEventThrottle={16}
+            keyExtractor={(_, i) => String(i)}
+            renderItem={({ item }) => (
+              <Image
+                source={{ uri: item }}
+                style={styles.mainImage}
+                resizeMode="cover"
+              />
+            )}
           />
           {images.length > 1 && (
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.thumbs}
-            >
-              {images.slice(0, 8).map((img, i) => (
-                <TouchableOpacity
-                  key={i}
-                  onPress={() => setImageIndex(i)}
-                  style={[
-                    styles.thumb,
-                    imageIndex === i && { borderColor: colors.primary, borderWidth: 3 },
-                  ]}
-                >
-                  <Image source={{ uri: img }} style={styles.thumbImg} resizeMode="cover" />
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
+            <View style={styles.pageIndicator}>
+              <Text style={[styles.pageIndicatorText, { color: colors.text }]}>
+                {imageIndex + 1} / {images.length}
+              </Text>
+            </View>
           )}
           <View style={[styles.priceTag, { backgroundColor: colors.primary }]}>
             <Text style={styles.priceTagText}>{property.price}</Text>
@@ -422,6 +433,26 @@ export default function PropertyDetailScreen() {
           </Section>
         )}
 
+        {/* Videos - play in-app */}
+        {videos.length > 0 && (
+          <Section title="Videos" icon="video" colors={colors}>
+            {videos.map((url, i) => {
+              const fullUrl = url.startsWith('http') ? url : `${getUploadBase()}${url.startsWith('/') ? '' : '/'}${url}`;
+              return (
+                <View key={i} style={[styles.videoWrap, { backgroundColor: colors.bg, borderColor: colors.border }]}>
+                  <Text style={[styles.videoLabel, { color: colors.textSecondary }]}>Video {i + 1}</Text>
+                  <Video
+                    source={{ uri: fullUrl }}
+                    style={styles.videoPlayer}
+                    controls
+                    resizeMode="contain"
+                  />
+                </View>
+              );
+            })}
+          </Section>
+        )}
+
         {/* Floor plan & virtual tour */}
         {(property.floorPlan || property.virtualTour) && (
           <Section title="Resources" icon="file-document-multiple" colors={colors}>
@@ -521,25 +552,18 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   backBtnText: { fontSize: 16, fontWeight: '700', color: '#111827' },
-  galleryWrap: { position: 'relative', marginBottom: SECTION_SPACING },
+  galleryWrap: { position: 'relative', marginBottom: SECTION_SPACING, height: 300 },
   mainImage: { width, height: 300 },
-  thumbs: {
+  pageIndicator: {
     position: 'absolute',
     bottom: 12,
-    left: 16,
     right: 16,
-    gap: 8,
-    flexDirection: 'row',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
-  thumb: {
-    width: 52,
-    height: 52,
-    borderRadius: 10,
-    overflow: 'hidden',
-    borderWidth: 2,
-    borderColor: 'transparent',
-  },
-  thumbImg: { width: '100%', height: '100%' },
+  pageIndicatorText: { fontSize: 13, fontWeight: '600', color: '#fff' },
   priceTag: {
     position: 'absolute',
     top: 16,
@@ -666,6 +690,14 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   handoverText: { fontSize: 15, fontWeight: '600' },
+  videoWrap: {
+    marginBottom: 16,
+    borderRadius: 12,
+    overflow: 'hidden',
+    borderWidth: 1,
+  },
+  videoLabel: { fontSize: 13, marginBottom: 8, fontWeight: '600' },
+  videoPlayer: { width: '100%', height: 200 },
   resourceBtn: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -81,6 +81,7 @@ export interface PropertyDetail extends PropertyListItem {
   category?: string;
   virtualTour?: string;
   floorPlan?: string;
+  videos?: string[];
 }
 
 function toImageUrl(src: string | undefined): string {
@@ -169,5 +170,8 @@ export async function fetchPropertyBySlug(
   base.category = p.category;
   base.virtualTour = p.virtualTour;
   base.floorPlan = p.floorPlan;
+  base.videos = (p.videos || []).map((s: string) =>
+    s.startsWith('http') ? s : `${getUploadBase()}${s.startsWith('/') ? '' : '/'}${s}`
+  );
   return base;
 }

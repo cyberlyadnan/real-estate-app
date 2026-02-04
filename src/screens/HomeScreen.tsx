@@ -3,6 +3,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   View,
   Text,
@@ -42,6 +43,7 @@ const STEPS = [
 ];
 
 export default function HomeScreen() {
+  const insets = useSafeAreaInsets();
   const { colors } = useTheme();
   const navigation = useNavigation<any>();
   const [featured, setFeatured] = useState<PropertyListItem[]>([]);
@@ -72,7 +74,7 @@ export default function HomeScreen() {
   return (
     <ScrollView
       style={[styles.container, { backgroundColor: colors.bg }]}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.content, { paddingTop: insets.top }]}
       refreshControl={
         <RefreshControl
           refreshing={refreshing}
