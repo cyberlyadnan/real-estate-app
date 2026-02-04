@@ -84,6 +84,3 @@ export const DarkTheme = {
   overlay: '#000000',
   overlayLight: '#FFFFFF',
 } as const;
-
-type ThemeColors = typeof LightTheme;
-export type { ThemeColors };

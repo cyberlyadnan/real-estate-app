@@ -1,21 +1,24 @@
 /**
  * Admin Drawer - Sidebar with Dashboard, Properties, Leads, Queries, Settings
- * + "Back to App" to return to customer flow
+ * + "Back to App" + "Log out" to return to customer flow
  */
 
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerContentComponentProps } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../contexts/ThemeContext';
+import { useAuth } from '../contexts/AuthContext';
 import AdminDashboardScreen from '../screens/AdminDashboardScreen';
 import AdminSettingsScreen from '../screens/AdminSettingsScreen';
 import AdminPlaceholderScreen from '../screens/AdminPlaceholderScreen';
+import AdminPropertiesStack from './AdminPropertiesStack';
 
 const Drawer = createDrawerNavigator();
 
 function AdminDrawerContent(props: DrawerContentComponentProps) {
   const { colors } = useTheme();
+  const { logout } = useAuth();
   const { state, navigation } = props;
 
   const goBackToApp = () => {
@@ -24,6 +27,20 @@ function AdminDrawerContent(props: DrawerContentComponentProps) {
     if (parent?.canGoBack()) {
       parent.goBack();
     }
+  };
+
+  const handleLogout = () => {
+    Alert.alert(
+      'Log out',
+      'Are you sure you want to log out?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Log out', style: 'destructive', onPress: async () => {
+          navigation.closeDrawer();
+          await logout();
+        }},
+      ]
+    );
   };
 
   return (
@@ -55,13 +72,20 @@ function AdminDrawerContent(props: DrawerContentComponentProps) {
           );
         })}
       </View>
-      <View style={[styles.backToAppWrap, { borderTopColor: colors.border }]}>
+      <View style={[styles.drawerFooter, { borderTopColor: colors.border }]}>
         <TouchableOpacity
           style={[styles.backToAppBtn, { backgroundColor: colors.primary + '20', borderColor: colors.primary + '50' }]}
           onPress={goBackToApp}
         >
           <Icon name="exit-to-app" size={24} color={colors.primary} />
           <Text style={[styles.backToAppText, { color: colors.primary }]}>Back to App</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.logoutBtn, { backgroundColor: colors.error + '15', borderColor: colors.error + '40' }]}
+          onPress={handleLogout}
+        >
+          <Icon name="logout" size={24} color={colors.error} />
+          <Text style={[styles.logoutText, { color: colors.error }]}>Log out</Text>
         </TouchableOpacity>
         <Text style={[styles.backToAppHint, { color: colors.textMuted }]}>
           Return to customer experience
@@ -82,12 +106,13 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   drawerLabel: { fontSize: 16, fontWeight: '600' },
-  backToAppWrap: {
+  drawerFooter: {
     paddingTop: 16,
     marginTop: 8,
     borderTopWidth: 1,
     paddingHorizontal: 16,
     paddingBottom: 24,
+    gap: 10,
   },
   backToAppBtn: {
     flexDirection: 'row',
@@ -99,7 +124,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   backToAppText: { fontSize: 16, fontWeight: '700' },
-  backToAppHint: { fontSize: 12, marginTop: 8, textAlign: 'center' },
+  logoutBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
+    paddingVertical: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+  },
+  logoutText: { fontSize: 15, fontWeight: '700' },
+  backToAppHint: { fontSize: 12, marginTop: 4, textAlign: 'center' },
 });
 
 export default function AdminDrawerNavigator() {
@@ -138,23 +173,26 @@ export default function AdminDrawerNavigator() {
       />
       <Drawer.Screen
         name="Properties"
-        component={AdminPlaceholderScreen}
-        initialParams={{ title: 'Properties', icon: 'home-city' }}
-        options={{ title: 'Properties' }}
+        component={AdminPropertiesStack}
+        options={{ title: 'Properties', headerStatusBarHeight: 0 }}
       />
       <Drawer.Screen
         name="Leads"
         component={AdminPlaceholderScreen}
         initialParams={{ title: 'Leads', icon: 'target' }}
-        options={{ title: 'Leads' }}
+        options={{ title: 'Leads', headerStatusBarHeight: 0 }}
       />
       <Drawer.Screen
         name="Queries"
         component={AdminPlaceholderScreen}
         initialParams={{ title: 'Queries', icon: 'email' }}
-        options={{ title: 'Queries' }}
+        options={{ title: 'Queries', headerStatusBarHeight: 0 }}
       />
-      <Drawer.Screen name="Settings" component={AdminSettingsScreen} options={{ title: 'Settings' }} />
+      <Drawer.Screen
+        name="Settings"
+        component={AdminSettingsScreen}
+        options={{ title: 'Settings', headerStatusBarHeight: 0 }}
+      />
     </Drawer.Navigator>
   );
 }
