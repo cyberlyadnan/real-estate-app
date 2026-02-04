@@ -15,7 +15,6 @@ import {
   NativeScrollEvent,
   Platform,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../contexts/ThemeContext';
 
@@ -47,7 +46,6 @@ interface WelcomeScreenProps {
 }
 
 function WelcomeScreen({ onGetStarted }: WelcomeScreenProps): React.JSX.Element {
-  const insets = useSafeAreaInsets();
   const { colors, theme, toggleTheme } = useTheme();
   const [index, setIndex] = useState(0);
   const flatListRef = useRef<FlatList>(null);
@@ -82,7 +80,7 @@ function WelcomeScreen({ onGetStarted }: WelcomeScreenProps): React.JSX.Element 
   return (
     <View style={[styles.container, { backgroundColor: colors.bg }]}>
       {/* Top bar */}
-      <View style={[styles.topBar, { paddingTop: insets.top + 8 }]}>
+      <View style={styles.topBar}>
         <View style={{ width: 44 }} />
         <View style={styles.dots}>
           {PAGES.map((_, i) => (
@@ -124,7 +122,7 @@ function WelcomeScreen({ onGetStarted }: WelcomeScreenProps): React.JSX.Element 
       />
 
       {/* Footer */}
-      <View style={[styles.footer, { paddingBottom: insets.bottom + 20 }]}>
+      <View style={[styles.footer, { paddingBottom: 20 }]}>
         <TouchableOpacity
           style={styles.cta}
           onPress={goNext}

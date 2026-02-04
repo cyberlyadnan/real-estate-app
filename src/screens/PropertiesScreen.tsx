@@ -3,7 +3,6 @@
  */
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   View,
   Text,
@@ -27,7 +26,6 @@ const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - 40 - 16) / 2;
 
 export default function PropertiesScreen({ navigation }: any) {
-  const insets = useSafeAreaInsets();
   const { colors } = useTheme();
   const [properties, setProperties] = useState<PropertyListItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -84,7 +82,7 @@ export default function PropertiesScreen({ navigation }: any) {
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.bg, paddingTop: insets.top }]}>
+    <View style={[styles.container, { backgroundColor: colors.bg }]}>
       <View style={[styles.searchWrap, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <Icon name="magnify" size={22} color={colors.textMuted} />
         <TextInput

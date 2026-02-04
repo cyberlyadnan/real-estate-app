@@ -1,5 +1,6 @@
 /**
- * Settings Screen - Theme, admin login, preferences
+ * Settings Screen - Theme & preferences (customer app only)
+ * Admin is a separate area – use More → Admin Panel to enter
  */
 
 import React from 'react';
@@ -13,11 +14,9 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../contexts/ThemeContext';
-import { useNavigation } from '@react-navigation/native';
 
 export default function SettingsScreen() {
   const { colors, theme, themeMode, setThemeMode, toggleTheme } = useTheme();
-  const navigation = useNavigation<any>();
 
   const themeLabel =
     themeMode === 'system' ? 'System' : themeMode === 'light' ? 'Light' : 'Dark';
@@ -116,22 +115,6 @@ export default function SettingsScreen() {
         </View>
       </View>
 
-      {/* Admin */}
-      <View style={[styles.section, { backgroundColor: colors.card, borderColor: colors.border }]}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>Admin</Text>
-        <TouchableOpacity
-          style={[styles.adminBtn, { backgroundColor: colors.primary }]}
-          onPress={() => navigation.navigate('Admin')}
-        >
-          <Icon name="shield-account" size={24} color="#fff" />
-          <Text style={styles.adminBtnText}>Login as Admin</Text>
-          <Icon name="chevron-right" size={24} color="#fff" />
-        </TouchableOpacity>
-        <Text style={[styles.adminHint, { color: colors.textMuted }]}>
-          Manage properties, leads, and listings
-        </Text>
-      </View>
-
       {/* App info */}
       <View style={[styles.section, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <Text style={[styles.sectionTitle, { color: colors.text }]}>About App</Text>
@@ -192,16 +175,6 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   themeBtnText: { fontSize: 13, fontWeight: '600' },
-  adminBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 12,
-    paddingVertical: 16,
-    borderRadius: 14,
-  },
-  adminBtnText: { fontSize: 16, fontWeight: '700', color: '#fff' },
-  adminHint: { fontSize: 13, marginTop: 12, textAlign: 'center' },
   appVersion: { fontSize: 14, marginBottom: 8 },
   appDesc: { fontSize: 13, lineHeight: 20 },
 });

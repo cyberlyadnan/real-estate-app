@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../contexts/ThemeContext';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 
 const QUICK_LINKS = [
@@ -22,12 +21,15 @@ const QUICK_LINKS = [
 ];
 
 const APP_SECTION = [
-  { id: 'settings', icon: 'cog-outline', title: 'Settings', desc: 'Theme, admin & preferences', screen: 'Settings' },
+  { id: 'settings', icon: 'cog-outline', title: 'Settings', desc: 'Theme & preferences', screen: 'Settings' },
+];
+
+const ADMIN_SECTION = [
+  { id: 'admin', icon: 'shield-account', title: 'Admin Panel', desc: 'Manage properties & leads (separate area)', screen: 'Admin' },
 ];
 
 export default function MoreScreen() {
   const { colors } = useTheme();
-  const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
 
   const renderSection = (title: string, items: typeof QUICK_LINKS) => (
@@ -73,7 +75,7 @@ export default function MoreScreen() {
   return (
     <ScrollView
       style={[styles.container, { backgroundColor: colors.bg }]}
-      contentContainerStyle={[styles.content, { paddingTop: insets.top }]}
+      contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
       {/* Hero */}
@@ -92,6 +94,9 @@ export default function MoreScreen() {
 
       {/* App */}
       {renderSection('App', APP_SECTION)}
+
+      {/* Admin - separate area, enter and exit from here */}
+      {renderSection('Admin', ADMIN_SECTION)}
 
       {/* Footer */}
       <View style={styles.footer}>
