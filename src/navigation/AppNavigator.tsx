@@ -13,7 +13,7 @@ import WelcomeScreen from '../screens/WelcomeScreen';
 import HomeScreen from '../screens/HomeScreen';
 import PropertiesScreen from '../screens/PropertiesScreen';
 import PropertyDetailScreen from '../screens/PropertyDetailScreen';
-import AdminScreen from '../screens/AdminScreen';
+import AdminGateScreen from '../screens/AdminGateScreen';
 import MoreScreen from '../screens/MoreScreen';
 import AboutScreen from '../screens/AboutScreen';
 import ContactScreen from '../screens/ContactScreen';
@@ -40,7 +40,7 @@ function MoreStack() {
       <Stack.Screen name="About" component={AboutScreen} options={{ title: 'About Us' }} />
       <Stack.Screen name="Contact" component={ContactScreen} options={{ title: 'Contact' }} />
       <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: 'Settings' }} />
-      <Stack.Screen name="Admin" component={AdminScreen} options={{ title: 'Admin Login' }} />
+      <Stack.Screen name="Admin" component={AdminGateScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }

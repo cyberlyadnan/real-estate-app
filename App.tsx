@@ -11,6 +11,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { ThemeProvider, useTheme } from './src/contexts/ThemeContext';
+import { AuthProvider } from './src/contexts/AuthContext';
 import AppNavigator from './src/navigation/AppNavigator';
 
 function AppContent() {
@@ -33,9 +34,11 @@ function App(): React.JSX.Element {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider>
         <SafeAreaProvider>
-          <NavigationContainer>
-            <AppContent />
-          </NavigationContainer>
+          <AuthProvider>
+            <NavigationContainer>
+              <AppContent />
+            </NavigationContainer>
+          </AuthProvider>
         </SafeAreaProvider>
       </ThemeProvider>
     </GestureHandlerRootView>
