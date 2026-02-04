@@ -128,7 +128,14 @@ export default function AdminDrawerNavigator() {
         headerShadowVisible: false,
       })}
     >
-      <Drawer.Screen name="Dashboard" component={AdminDashboardScreen} options={{ title: 'Dashboard' }} />
+      <Drawer.Screen
+        name="Dashboard"
+        component={AdminDashboardScreen}
+        options={{
+          title: 'Dashboard',
+          headerStatusBarHeight: 0,
+        }}
+      />
       <Drawer.Screen
         name="Properties"
         component={AdminPlaceholderScreen}

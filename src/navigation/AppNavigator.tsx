@@ -6,6 +6,7 @@ import React, { useState, useEffect } from 'react';
 import { View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -89,7 +90,14 @@ function MainTabs() {
       <Tab.Screen
         name="More"
         component={MoreStack}
-        options={{ title: 'More', headerShown: false }}
+        options={({ route }) => {
+          const routeName = getFocusedRouteNameFromRoute(route) ?? 'MoreMain';
+          return {
+            title: 'More',
+            headerShown: false,
+            tabBarStyle: routeName === 'Admin' ? { display: 'none' } : undefined,
+          };
+        }}
       />
     </Tab.Navigator>
   );

@@ -13,7 +13,7 @@ import {
   ActivityIndicator,
   Dimensions,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+// import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../contexts/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
 import { fetchProperties } from '../api/properties';
@@ -118,14 +118,14 @@ export default function HomeScreen() {
             style={styles.seeAll}
           >
             <Text style={[styles.seeAllText, { color: colors.primary }]}>See All</Text>
-            <Icon name="chevron-right" size={20} color={colors.primary} />
+            {/* <Icon name="chevron-right" size={20} color={colors.primary} /> */}
           </TouchableOpacity>
         </View>
         {loading ? (
           <ActivityIndicator size="large" color={colors.primary} style={{ marginVertical: 32 }} />
         ) : featured.length === 0 ? (
           <View style={[styles.empty, { backgroundColor: colors.card, borderColor: colors.border }]}>
-            <Icon name="home-search" size={48} color={colors.textMuted} />
+            {/* <Icon name="home-search" size={48} color={colors.textMuted} /> */}
             <Text style={[styles.emptyText, { color: colors.textMuted }]}>
               No featured properties yet
             </Text>
@@ -159,7 +159,7 @@ export default function HomeScreen() {
             style={[styles.whyCard, { backgroundColor: colors.card, borderColor: colors.border }]}
           >
             <View style={[styles.whyIcon, { backgroundColor: colors.primary + '20' }]}>
-              <Icon name={item.icon as any} size={24} color={colors.primary} />
+              {/* <Icon name={item.icon as any} size={24} color={colors.primary} /> */}
             </View>
             <View style={styles.whyContent}>
               <Text style={[styles.whyTitle, { color: colors.text }]}>{item.title}</Text>
@@ -199,7 +199,7 @@ export default function HomeScreen() {
         activeOpacity={0.85}
       >
         <View style={[styles.aboutIconWrap, { backgroundColor: colors.primary + '20' }]}>
-          <Icon name="domain" size={32} color={colors.primary} />
+          {/* <Icon name="domain" size={32} color={colors.primary} /> */}
         </View>
         <View style={styles.aboutContent}>
           <Text style={[styles.aboutTitle, { color: colors.text }]}>About Us</Text>
@@ -207,7 +207,7 @@ export default function HomeScreen() {
             Our mission, values & 30+ years of excellence in luxury real estate
           </Text>
         </View>
-        <Icon name="chevron-right" size={24} color={colors.primary} />
+        {/* <Icon name="chevron-right" size={24} color={colors.primary} /> */}
       </TouchableOpacity>
 
       {/* Contact */}
@@ -217,7 +217,7 @@ export default function HomeScreen() {
         activeOpacity={0.85}
       >
         <View style={[styles.aboutIconWrap, { backgroundColor: colors.primary + '20' }]}>
-          <Icon name="email-outline" size={32} color={colors.primary} />
+          {/* <Icon name="email-outline" size={32} color={colors.primary} /> */}
         </View>
         <View style={styles.aboutContent}>
           <Text style={[styles.aboutTitle, { color: colors.text }]}>Get in Touch</Text>
@@ -225,7 +225,7 @@ export default function HomeScreen() {
             Have questions? Reach out—we'd love to hear from you
           </Text>
         </View>
-        <Icon name="chevron-right" size={24} color={colors.primary} />
+        {/* <Icon name="chevron-right" size={24} color={colors.primary} /> */}
       </TouchableOpacity>
 
       {/* CTA */}
@@ -239,7 +239,7 @@ export default function HomeScreen() {
           onPress={() => navigation.navigate('Properties')}
         >
           <Text style={styles.ctaBtnText}>Explore Properties</Text>
-          <Icon name="arrow-right" size={20} color="#111827" />
+          {/* <Icon name="arrow-right" size={20} color="#111827" /> */}
         </TouchableOpacity>
       </View>
     </ScrollView>

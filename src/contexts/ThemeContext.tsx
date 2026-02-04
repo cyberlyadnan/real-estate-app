@@ -12,7 +12,8 @@ import React, {
 } from 'react';
 import { useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { LightTheme, DarkTheme, ThemeColors } from '../theme/colors';
+import { LightTheme, DarkTheme } from '../theme/colors';
+import type { ThemeColors } from '../theme/colors';
 
 const THEME_STORAGE_KEY = '@real_estate_app_theme';
 
