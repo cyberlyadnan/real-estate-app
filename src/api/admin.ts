@@ -38,13 +38,119 @@ export async function getLeadStats(): Promise<{ success: boolean; data?: LeadSta
   return request<LeadStats>('/leads/stats');
 }
 
-export async function getLeads(params?: { limit?: number; page?: number }): Promise<{ success: boolean; data?: any[]; pagination?: any; message?: string }> {
+export interface LeadItem {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+  source: string;
+  status: string;
+  priority?: string;
+  propertyName?: string;
+  propertySlug?: string;
+  nextFollowUpAt?: string | null;
+  assignedTo?: { name: string; email: string } | null;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export interface FollowUpItem {
+  _id: string;
+  leadId: string;
+  dueAt: string;
+  type: string;
+  title: string;
+  notes?: string;
+  completedAt?: string | null;
+  completedBy?: { name: string } | null;
+  createdAt: string;
+}
+
+export async function getLeads(params?: {
+  limit?: number;
+  page?: number;
+  search?: string;
+  status?: string;
+  overdue?: boolean;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+}): Promise<{ success: boolean; data?: LeadItem[]; pagination?: { page: number; limit: number; total: number; pages: number }; message?: string }> {
   const q = new URLSearchParams();
   if (params?.limit != null) q.set('limit', String(params.limit));
   if (params?.page != null) q.set('page', String(params.page));
-  q.set('sortBy', 'createdAt');
-  q.set('sortOrder', 'desc');
+  if (params?.search) q.set('search', params.search);
+  if (params?.status) q.set('status', params.status);
+  if (params?.overdue) q.set('overdue', 'true');
+  if (params?.sortBy) q.set('sortBy', params.sortBy);
+  if (params?.sortOrder) q.set('sortOrder', params.sortOrder);
   return request<any>(`/leads?${q.toString()}`);
+}
+
+export async function getLead(id: string): Promise<{ success: boolean; data?: LeadItem & { followUps?: FollowUpItem[] }; message?: string }> {
+  return request<any>(`/leads/${id}`);
+}
+
+export async function createLead(data: {
+  name: string;
+  email: string;
+  phone: string;
+  message?: string;
+  source?: string;
+  propertySlug?: string;
+  propertyName?: string;
+  budget?: number;
+  budgetMax?: number;
+  preferredArea?: string;
+  address?: string;
+}): Promise<{ success: boolean; data?: LeadItem; message?: string }> {
+  return request<LeadItem>('/leads', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateLead(id: string, data: {
+  status?: string;
+  priority?: string;
+  notes?: string;
+  nextFollowUpAt?: string | null;
+  budget?: number | null;
+  budgetMax?: number | null;
+  preferredArea?: string | null;
+  address?: string | null;
+  lastContactMode?: string | null;
+  contactHistory?: string | null;
+}): Promise<{ success: boolean; data?: LeadItem; message?: string }> {
+  return request<LeadItem>(`/leads/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteLead(id: string): Promise<{ success: boolean; message?: string }> {
+  return request<void>(`/leads/${id}`, { method: 'DELETE' });
+}
+
+export async function addLeadFollowUp(leadId: string, data: { dueAt: string; type?: string; title: string; notes?: string }): Promise<{ success: boolean; data?: FollowUpItem; message?: string }> {
+  return request<FollowUpItem>(`/leads/${leadId}/follow-ups`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function completeLeadFollowUp(leadId: string, followUpId: string): Promise<{ success: boolean; data?: FollowUpItem; message?: string }> {
+  return request<FollowUpItem>(`/leads/${leadId}/follow-ups/${followUpId}/complete`, {
+    method: 'PATCH',
+  });
+}
+
+export async function getLeadAlerts(): Promise<{
+  success: boolean;
+  data?: { overdueLeads: LeadItem[]; upcomingLeads: LeadItem[]; followUpsDue: FollowUpItem[] };
+  message?: string;
+}> {
+  return request<any>('/leads/alerts');
 }
 
 export async function getProperties(params?: { limit?: number; page?: number; propertyType?: string; status?: string; search?: string }): Promise<{ success: boolean; data?: any[]; pagination?: any; message?: string }> {

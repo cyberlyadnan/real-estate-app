@@ -13,6 +13,7 @@ import AdminDashboardScreen from '../screens/AdminDashboardScreen';
 import AdminSettingsScreen from '../screens/AdminSettingsScreen';
 import AdminPlaceholderScreen from '../screens/AdminPlaceholderScreen';
 import AdminPropertiesStack from './AdminPropertiesStack';
+import AdminLeadsStack from './AdminLeadsStack';
 import AdminQueriesStack from './AdminQueriesStack';
 
 const Drawer = createDrawerNavigator();
@@ -179,8 +180,7 @@ export default function AdminDrawerNavigator() {
       />
       <Drawer.Screen
         name="Leads"
-        component={AdminPlaceholderScreen}
-        initialParams={{ title: 'Leads', icon: 'target' }}
+        component={AdminLeadsStack}
         options={{ title: 'Leads', headerStatusBarHeight: 0 }}
       />
       <Drawer.Screen
