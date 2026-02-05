@@ -1,11 +1,12 @@
 /**
- * Admin Drawer - Sidebar with Dashboard, Properties, Leads, Queries, Settings
+ * Admin Drawer - Sidebar from RIGHT, Back (left) + Menu (right) in header
  * + "Back to App" + "Log out" to return to customer flow
  */
 
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerContentComponentProps } from '@react-navigation/drawer';
+import { DrawerActions } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
