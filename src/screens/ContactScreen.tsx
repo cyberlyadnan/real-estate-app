@@ -1,5 +1,5 @@
 /**
- * Contact Screen - Contact form and info
+ * Contact Screen - Professional contact form and quick actions
  */
 
 import React, { useState } from 'react';
@@ -14,34 +14,67 @@ import {
   KeyboardAvoidingView,
   Platform,
   Linking,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../contexts/ThemeContext';
 import { submitQuery } from '../api/queries';
 
+const SUBJECT_OPTIONS = [
+  { value: '', label: 'Select subject' },
+  { value: 'general', label: 'General Inquiry' },
+  { value: 'property', label: 'Property Inquiry' },
+  { value: 'viewing', label: 'Schedule Viewing' },
+  { value: 'investment', label: 'Investment Opportunity' },
+  { value: 'other', label: 'Other' },
+];
+
 export default function ContactScreen() {
   const { colors } = useTheme();
-  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async () => {
-    if (!form.name.trim() || !form.email.trim() || !form.phone.trim()) {
-      Alert.alert('Missing fields', 'Please fill in name, email and phone.');
+    const name = form.name.trim();
+    const email = form.email.trim();
+    const phone = form.phone.trim();
+    const message = form.message.trim();
+
+    if (!name) {
+      Alert.alert('Required', 'Please enter your name.');
       return;
     }
+    if (!email) {
+      Alert.alert('Required', 'Please enter your email address.');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      Alert.alert('Invalid Email', 'Please enter a valid email address.');
+      return;
+    }
+    if (!phone || phone.replace(/\D/g, '').length < 10) {
+      Alert.alert('Required', 'Please enter a valid phone number (at least 10 digits).');
+      return;
+    }
+    if (!message) {
+      Alert.alert('Required', 'Please enter your message.');
+      return;
+    }
+
     setSubmitting(true);
     try {
       await submitQuery({
-        name: form.name.trim(),
-        email: form.email.trim(),
-        phone: form.phone.trim(),
-        message: form.message.trim() || 'General inquiry from app',
-        source: 'contact_page',
+        name,
+        email,
+        phone,
+        message,
+        subject: form.subject ? SUBJECT_OPTIONS.find((o) => o.value === form.subject)?.label || form.subject : undefined,
+        source: 'mobile_app',
       });
-      Alert.alert('Thank you', 'We will get back to you shortly.');
-      setForm({ name: '', email: '', phone: '', message: '' });
+      Alert.alert('Thank You', 'Your message has been sent. We will get back to you shortly.');
+      setForm({ name: '', email: '', phone: '', subject: '', message: '' });
     } catch (e) {
-      Alert.alert('Error', e instanceof Error ? e.message : 'Failed to send');
+      Alert.alert('Error', e instanceof Error ? e.message : 'Failed to send message');
     } finally {
       setSubmitting(false);
     }
@@ -68,56 +101,88 @@ export default function ContactScreen() {
         keyboardShouldPersistTaps="handled"
       >
         <View style={[styles.hero, { backgroundColor: colors.primary + '15' }]}>
-          <Icon name="email-outline" size={40} color={colors.primary} />
+          <Icon name="email-outline" size={44} color={colors.primary} />
           <Text style={[styles.title, { color: colors.text }]}>Get in Touch</Text>
           <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-            We'd love to hear from you
+            Have a question? We're here to help
           </Text>
         </View>
 
         <View style={[styles.section, { backgroundColor: colors.card, borderColor: colors.border }]}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>Contact Form</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>Send us a message</Text>
+          <Text style={[styles.sectionSub, { color: colors.textMuted }]}>Fill in the form below and we'll respond within 24 hours.</Text>
+
+          <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>Name *</Text>
           <TextInput
             style={[styles.input, { backgroundColor: colors.bg, color: colors.text, borderColor: colors.border }]}
-            placeholder="Name *"
+            placeholder="Your full name"
             placeholderTextColor={colors.textMuted}
             value={form.name}
             onChangeText={(t) => setForm((p) => ({ ...p, name: t }))}
             autoCapitalize="words"
           />
+
+          <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>Email *</Text>
           <TextInput
             style={[styles.input, { backgroundColor: colors.bg, color: colors.text, borderColor: colors.border }]}
-            placeholder="Email *"
+            placeholder="you@example.com"
             placeholderTextColor={colors.textMuted}
             value={form.email}
             onChangeText={(t) => setForm((p) => ({ ...p, email: t }))}
             keyboardType="email-address"
             autoCapitalize="none"
           />
+
+          <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>Phone *</Text>
           <TextInput
             style={[styles.input, { backgroundColor: colors.bg, color: colors.text, borderColor: colors.border }]}
-            placeholder="Phone *"
+            placeholder="+971 50 123 4567"
             placeholderTextColor={colors.textMuted}
             value={form.phone}
             onChangeText={(t) => setForm((p) => ({ ...p, phone: t }))}
             keyboardType="phone-pad"
           />
+
+          <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>Subject</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.subjectRow}>
+            {SUBJECT_OPTIONS.filter((o) => o.value).map((opt) => (
+              <TouchableOpacity
+                key={opt.value}
+                style={[
+                  styles.subjectChip,
+                  { backgroundColor: form.subject === opt.value ? colors.primary + '25' : colors.bg, borderColor: colors.border },
+                ]}
+                onPress={() => setForm((p) => ({ ...p, subject: form.subject === opt.value ? '' : opt.value }))}
+              >
+                <Text style={[styles.subjectChipText, { color: form.subject === opt.value ? colors.primary : colors.text }]}>{opt.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+
+          <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>Message *</Text>
           <TextInput
             style={[styles.input, styles.textArea, { backgroundColor: colors.bg, color: colors.text, borderColor: colors.border }]}
-            placeholder="Message"
+            placeholder="Tell us how we can help..."
             placeholderTextColor={colors.textMuted}
             value={form.message}
             onChangeText={(t) => setForm((p) => ({ ...p, message: t }))}
             multiline
-            numberOfLines={4}
+            numberOfLines={5}
           />
+
           <TouchableOpacity
             style={[styles.btn, { backgroundColor: colors.primary }]}
             onPress={handleSubmit}
             disabled={submitting}
           >
-            <Icon name="send" size={20} color="#fff" />
-            <Text style={styles.btnText}>{submitting ? 'Sending...' : 'Send Message'}</Text>
+            {submitting ? (
+              <ActivityIndicator color="#fff" size="small" />
+            ) : (
+              <>
+                <Icon name="send" size={20} color="#fff" />
+                <Text style={styles.btnText}>Send Message</Text>
+              </>
+            )}
           </TouchableOpacity>
         </View>
 
@@ -127,22 +192,40 @@ export default function ContactScreen() {
             style={[styles.quickBtn, { backgroundColor: colors.bg, borderColor: colors.border }]}
             onPress={openWhatsApp}
           >
-            <Icon name="whatsapp" size={28} color="#25D366" />
-            <Text style={[styles.quickBtnText, { color: colors.text }]}>WhatsApp</Text>
+            <View style={[styles.quickIconWrap, { backgroundColor: '#25D366' + '20' }]}>
+              <Icon name="whatsapp" size={28} color="#25D366" />
+            </View>
+            <View style={styles.quickBtnContent}>
+              <Text style={[styles.quickBtnText, { color: colors.text }]}>WhatsApp</Text>
+              <Text style={[styles.quickBtnSub, { color: colors.textMuted }]}>Chat with us instantly</Text>
+            </View>
+            <Icon name="chevron-right" size={24} color={colors.textMuted} />
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.quickBtn, { backgroundColor: colors.bg, borderColor: colors.border }]}
             onPress={openCall}
           >
-            <Icon name="phone" size={24} color={colors.primary} />
-            <Text style={[styles.quickBtnText, { color: colors.text }]}>Call +971 50 123 4567</Text>
+            <View style={[styles.quickIconWrap, { backgroundColor: colors.primary + '20' }]}>
+              <Icon name="phone" size={24} color={colors.primary} />
+            </View>
+            <View style={styles.quickBtnContent}>
+              <Text style={[styles.quickBtnText, { color: colors.text }]}>Call Us</Text>
+              <Text style={[styles.quickBtnSub, { color: colors.textMuted }]}>+971 50 123 4567</Text>
+            </View>
+            <Icon name="chevron-right" size={24} color={colors.textMuted} />
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.quickBtn, { backgroundColor: colors.bg, borderColor: colors.border }]}
             onPress={openEmail}
           >
-            <Icon name="email" size={24} color={colors.primary} />
-            <Text style={[styles.quickBtnText, { color: colors.text }]}>info@luxuryestate.ae</Text>
+            <View style={[styles.quickIconWrap, { backgroundColor: colors.primary + '20' }]}>
+              <Icon name="email" size={24} color={colors.primary} />
+            </View>
+            <View style={styles.quickBtnContent}>
+              <Text style={[styles.quickBtnText, { color: colors.text }]}>Email</Text>
+              <Text style={[styles.quickBtnSub, { color: colors.textMuted }]}>info@luxuryestate.ae</Text>
+            </View>
+            <Icon name="chevron-right" size={24} color={colors.textMuted} />
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -155,13 +238,13 @@ const styles = StyleSheet.create({
   content: { paddingBottom: 40 },
   hero: {
     alignItems: 'center',
-    paddingVertical: 32,
+    paddingVertical: 36,
     paddingHorizontal: 24,
     marginBottom: 24,
     borderBottomLeftRadius: 24,
     borderBottomRightRadius: 24,
   },
-  title: { fontSize: 26, fontWeight: '800', marginTop: 16, marginBottom: 8 },
+  title: { fontSize: 28, fontWeight: '800', marginTop: 16, marginBottom: 8 },
   subtitle: { fontSize: 15 },
   section: {
     marginHorizontal: 20,
@@ -170,22 +253,33 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 1,
   },
-  sectionTitle: { fontSize: 18, fontWeight: '700', marginBottom: 18 },
+  sectionTitle: { fontSize: 18, fontWeight: '700', marginBottom: 4 },
+  sectionSub: { fontSize: 14, marginBottom: 20 },
+  inputLabel: { fontSize: 13, fontWeight: '600', marginBottom: 6 },
   input: {
     height: 50,
     paddingHorizontal: 16,
     borderRadius: 12,
     borderWidth: 1,
     fontSize: 16,
-    marginBottom: 14,
+    marginBottom: 16,
   },
-  textArea: { height: 100, paddingTop: 14, textAlignVertical: 'top' },
+  textArea: { height: 120, paddingTop: 14, textAlignVertical: 'top' },
+  subjectRow: { marginBottom: 16 },
+  subjectChip: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginRight: 8,
+  },
+  subjectChipText: { fontSize: 14, fontWeight: '600' },
   btn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
-    height: 52,
+    height: 54,
     borderRadius: 14,
     marginTop: 8,
   },
@@ -199,5 +293,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 12,
   },
-  quickBtnText: { fontSize: 16, fontWeight: '600', flex: 1 },
+  quickIconWrap: {
+    width: 48,
+    height: 48,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  quickBtnContent: { flex: 1 },
+  quickBtnText: { fontSize: 16, fontWeight: '600' },
+  quickBtnSub: { fontSize: 13, marginTop: 2 },
 });

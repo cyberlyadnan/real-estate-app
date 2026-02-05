@@ -38,9 +38,9 @@ function MoreStack() {
       }}
     >
       <Stack.Screen name="MoreMain" component={MoreScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="About" component={AboutScreen} options={{ title: 'About Us' }} />
-      <Stack.Screen name="Contact" component={ContactScreen} options={{ title: 'Contact' }} />
-      <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: 'Settings' }} />
+      <Stack.Screen name="About" component={AboutScreen} options={{ title: 'About Us', headerShown: false }} />
+      <Stack.Screen name="Contact" component={ContactScreen} options={{ title: 'Contact', headerShown: false }} />
+      <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: 'Settings', headerShown: false }} />
       <Stack.Screen name="Admin" component={AdminGateScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );

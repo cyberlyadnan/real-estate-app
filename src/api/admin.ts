@@ -85,9 +85,60 @@ export async function updateProperty(id: string, formData: FormData): Promise<{ 
   return propertyFormRequest(formData, 'PUT', id);
 }
 
-export async function getQueries(params?: { limit?: number; page?: number }): Promise<{ success: boolean; data?: any[]; pagination?: any; message?: string }> {
+export interface QueryItem {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+  subject?: string;
+  source: string;
+  status: string;
+  priority?: string;
+  interestedProperty?: string;
+  notes?: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export async function getQueries(params?: {
+  limit?: number;
+  page?: number;
+  search?: string;
+  status?: string;
+  source?: string;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+}): Promise<{ success: boolean; data?: QueryItem[]; pagination?: { page: number; limit: number; total: number; pages: number }; message?: string }> {
   const q = new URLSearchParams();
   if (params?.limit != null) q.set('limit', String(params.limit));
   if (params?.page != null) q.set('page', String(params.page));
+  if (params?.search) q.set('search', params.search);
+  if (params?.status) q.set('status', params.status);
+  if (params?.source) q.set('source', params.source);
+  if (params?.sortBy) q.set('sortBy', params.sortBy);
+  if (params?.sortOrder) q.set('sortOrder', params.sortOrder);
   return request<any>(`/queries?${q.toString()}`);
+}
+
+export async function getQuery(id: string): Promise<{ success: boolean; data?: QueryItem; message?: string }> {
+  return request<QueryItem>(`/queries/${id}`);
+}
+
+export async function updateQuery(id: string, data: { status?: string; notes?: string; priority?: string }): Promise<{ success: boolean; data?: QueryItem; message?: string }> {
+  return request<QueryItem>(`/queries/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteQuery(id: string): Promise<{ success: boolean; message?: string }> {
+  return request<void>(`/queries/${id}`, { method: 'DELETE' });
+}
+
+export async function bulkUpdateQueryStatus(ids: string[], status: string): Promise<{ success: boolean; message?: string }> {
+  return request<any>('/queries/bulk/status', {
+    method: 'PATCH',
+    body: JSON.stringify({ ids, status }),
+  });
 }

@@ -13,6 +13,7 @@ import AdminDashboardScreen from '../screens/AdminDashboardScreen';
 import AdminSettingsScreen from '../screens/AdminSettingsScreen';
 import AdminPlaceholderScreen from '../screens/AdminPlaceholderScreen';
 import AdminPropertiesStack from './AdminPropertiesStack';
+import AdminQueriesStack from './AdminQueriesStack';
 
 const Drawer = createDrawerNavigator();
 
@@ -184,8 +185,7 @@ export default function AdminDrawerNavigator() {
       />
       <Drawer.Screen
         name="Queries"
-        component={AdminPlaceholderScreen}
-        initialParams={{ title: 'Queries', icon: 'email' }}
+        component={AdminQueriesStack}
         options={{ title: 'Queries', headerStatusBarHeight: 0 }}
       />
       <Drawer.Screen
