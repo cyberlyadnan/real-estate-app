@@ -28,7 +28,46 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { fetchPropertyBySlug } from '../api/properties';
 import { getUploadBase } from '../api/config';
 import { submitQuery } from '../api/queries';
-import type { PropertyDetail } from '../api/properties';
+
+interface PropertyDetail {
+  _id: string;
+  slug: string;
+  name: string;
+  location: string;
+  price: string;
+  image: string;
+  bedrooms: number | string;
+  bathrooms: number | string;
+  area: string;
+  description: string;
+  shortDescription?: string;
+  images: string[];
+  priceAmount?: number;
+  priceCurrency?: string;
+  pricePerSqft?: number;
+  originalPrice?: number;
+  discount?: number;
+  paymentPlan?: string;
+  downPayment?: number;
+  monthlyPayment?: number;
+  locationFull?: Record<string, any>;
+  details?: Record<string, any>;
+  features?: string[];
+  amenities?: string[];
+  locationInfo?: Array<{ title: string; value: string; description: string; icon?: string }>;
+  investmentHighlights?: Array<{ title: string; value: string; description: string; color?: string }>;
+  developer?: string;
+  handoverDate?: string;
+  ownershipType?: string;
+  titleDeed?: boolean;
+  mortgageAvailable?: boolean;
+  status?: string;
+  propertyType?: string;
+  category?: string;
+  virtualTour?: string;
+  floorPlan?: string;
+  videos?: string[];
+}
 
 const { width } = Dimensions.get('window');
 

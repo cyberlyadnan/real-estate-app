@@ -12,7 +12,15 @@ import React, {
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as AuthApi from '../api/auth';
-import type { AuthUser } from '../api/auth';
+
+interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  createdAt?: string;
+  lastLogin?: string;
+}
 
 const ACCESS_TOKEN_KEY = '@auth_access_token';
 const REFRESH_TOKEN_KEY = '@auth_refresh_token';

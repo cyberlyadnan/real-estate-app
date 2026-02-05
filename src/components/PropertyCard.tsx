@@ -13,7 +13,20 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../contexts/ThemeContext';
-import type { PropertyListItem } from '../api/properties';
+
+interface PropertyListItem {
+  _id: string;
+  slug: string;
+  name: string;
+  location: string;
+  price: string;
+  image: string;
+  bedrooms: number | string;
+  bathrooms: number | string;
+  area: string;
+  propertyType?: string;
+  category?: string;
+}
 
 interface PropertyCardProps {
   property: PropertyListItem;

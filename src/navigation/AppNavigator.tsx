@@ -140,7 +140,7 @@ export default function AppNavigator() {
         name="PropertyDetail"
         component={PropertyDetailScreen}
         options={{
-          headerShown: true,
+          headerShown: false,
           headerStyle: { backgroundColor: colors.bg },
           headerTintColor: colors.text,
           headerTitle: '',

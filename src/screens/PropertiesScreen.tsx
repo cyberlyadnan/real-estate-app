@@ -20,7 +20,20 @@ import { useTheme } from '../contexts/ThemeContext';
 import { useFocusEffect } from '@react-navigation/native';
 import { fetchProperties } from '../api/properties';
 import PropertyCard from '../components/PropertyCard';
-import type { PropertyListItem } from '../api/properties';
+
+interface PropertyListItem {
+  _id: string;
+  slug: string;
+  name: string;
+  location: string;
+  price: string;
+  image: string;
+  bedrooms: number | string;
+  bathrooms: number | string;
+  area: string;
+  propertyType?: string;
+  category?: string;
+}
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - 40 - 16) / 2;

@@ -26,17 +26,17 @@ export default function AdminPropertiesStack() {
       <Stack.Screen
         name="PropertyList"
         component={AdminPropertiesListScreen}
-        options={{ title: 'Properties' }}
+        options={{ title: 'Properties', headerShown: false }}
       />
       <Stack.Screen
         name="PropertyAdd"
         component={AdminPropertyFormScreen}
-        options={{ title: 'Add Property' }}
+        options={{ title: 'Add Property', headerShown: false }}
       />
       <Stack.Screen
         name="PropertyEdit"
         component={AdminPropertyFormScreen}
-        options={{ title: 'Edit Property' }}
+        options={{ title: 'Edit Property', headerShown: false }}
       />
     </Stack.Navigator>
   );
