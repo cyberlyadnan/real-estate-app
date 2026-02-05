@@ -68,9 +68,9 @@ function AdminDrawerContent(props: DrawerContentComponentProps) {
               onPress={() => navigation.navigate(route.name)}
             >
               <Icon name={icons[route.name] || 'circle'} size={24} color={focused ? colors.primary : colors.textMuted} />
-              <Text style={[styles.drawerLabel, { color: focused ? colors.primary : colors.text }]}>
+              {/* <Text style={[styles.drawerLabel, { color: focused ? colors.primary : colors.text }]}>
                 {route.name}
-              </Text>
+              </Text> */}
             </TouchableOpacity>
           );
         })}
@@ -99,6 +99,14 @@ function AdminDrawerContent(props: DrawerContentComponentProps) {
 }
 
 const styles = StyleSheet.create({
+  headerBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    gap: 6,
+  },
+  headerBackText: { fontSize: 16, fontWeight: '600' },
   drawerScroll: { flexGrow: 1 },
   drawerItems: { flex: 1, paddingVertical: 8 },
   drawerRow: {
@@ -143,10 +151,19 @@ const styles = StyleSheet.create({
 export default function AdminDrawerNavigator() {
   const { colors } = useTheme();
 
+  const goBackToApp = (navigation: any) => {
+    navigation.closeDrawer();
+    const parent = navigation.getParent();
+    if (parent?.canGoBack()) {
+      parent.goBack();
+    }
+  };
+
   return (
     <Drawer.Navigator
       drawerContent={(props) => <AdminDrawerContent {...props} />}
-      screenOptions={({ route }) => ({
+      drawerPosition="right"
+      screenOptions={({ route, navigation }) => ({
         drawerIcon: ({ focused, color, size }) => {
           const icons: Record<string, string> = {
             Dashboard: focused ? 'view-dashboard' : 'view-dashboard-outline',
@@ -164,6 +181,25 @@ export default function AdminDrawerNavigator() {
         headerStyle: { backgroundColor: colors.bg },
         headerTintColor: colors.text,
         headerShadowVisible: false,
+        headerLeft: () => (
+          <TouchableOpacity
+            onPress={() => goBackToApp(navigation)}
+            style={styles.headerBtn}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+          >
+            <Icon name="arrow-left" size={24} color={colors.primary} />
+            <Text style={[styles.headerBackText, { color: colors.primary }]}>Back</Text>
+          </TouchableOpacity>
+        ),
+        headerRight: () => (
+          <TouchableOpacity
+            onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+            style={styles.headerBtn}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+          >
+            <Icon name="menu" size={26} color={colors.text} />
+          </TouchableOpacity>
+        ),
       })}
     >
       <Drawer.Screen
