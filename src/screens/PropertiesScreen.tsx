@@ -96,26 +96,27 @@ export default function PropertiesScreen({ navigation }: any) {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.bg }]}>
-      <View style={[styles.searchWrap, { backgroundColor: colors.card, borderColor: colors.border }]}>
-        <Icon name="magnify" size={22} color={colors.textMuted} />
-        <TextInput
-          style={[styles.searchInput, { color: colors.text }]}
-          placeholder="Search properties..."
-          placeholderTextColor={colors.textMuted}
-          value={search}
-          onChangeText={setSearch}
-        />
-        {search.length > 0 && (
-          <TouchableOpacity onPress={() => setSearch('')}>
-            <Icon name="close-circle" size={22} color={colors.textMuted} />
-          </TouchableOpacity>
-        )}
-      </View>
-
-      <View style={styles.header}>
-        <Text style={[styles.count, { color: colors.textSecondary }]}>
-          {filtered.length} {filtered.length === 1 ? 'property' : 'properties'}
-        </Text>
+      <View style={styles.searchSection}>
+        <View style={[styles.searchWrap, { backgroundColor: colors.card, borderColor: colors.border }]}>
+          <Icon name="magnify" size={22} color={colors.primary} />
+          <TextInput
+            style={[styles.searchInput, { color: colors.text }]}
+            placeholder="Search by name or location..."
+            placeholderTextColor={colors.textMuted}
+            value={search}
+            onChangeText={setSearch}
+          />
+          {search.length > 0 && (
+            <TouchableOpacity onPress={() => setSearch('')} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}>
+              <Icon name="close-circle" size={22} color={colors.textMuted} />
+            </TouchableOpacity>
+          )}
+        </View>
+        <View style={styles.header}>
+          <Text style={[styles.count, { color: colors.textSecondary }]}>
+            {filtered.length} {filtered.length === 1 ? 'property' : 'properties'}
+          </Text>
+        </View>
       </View>
 
       {filtered.length === 0 ? (
@@ -150,10 +151,14 @@ export default function PropertiesScreen({ navigation }: any) {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  searchSection: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 8,
+  },
   searchWrap: {
     flexDirection: 'row',
     alignItems: 'center',
-    margin: 16,
     paddingHorizontal: 16,
     paddingVertical: 14,
     borderRadius: 14,
@@ -165,11 +170,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingVertical: 0,
   },
-  header: { paddingHorizontal: 20, marginBottom: 12 },
-  count: { fontSize: 14, fontWeight: '500' },
-  list: { paddingHorizontal: 16, paddingBottom: 24 },
-  row: { gap: 16, marginBottom: 16 },
-  cardWrap: { flex: 1, maxWidth: (width - 48) / 2 },
+  header: { paddingHorizontal: 4, marginTop: 12, marginBottom: 4 },
+  count: { fontSize: 14, fontWeight: '600' },
+  list: { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 24 },
+  row: { gap: 12, marginBottom: 12 },
+  cardWrap: { flex: 1, maxWidth: (width - 44) / 2 },
   empty: {
     flex: 1,
     alignItems: 'center',
