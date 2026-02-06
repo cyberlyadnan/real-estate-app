@@ -46,8 +46,19 @@ function MoreStack() {
   );
 }
 
+const TAB_BAR_HEIGHT = 60;
+
 function MainTabs() {
   const { colors } = useTheme();
+
+  const tabBarStyle = {
+    backgroundColor: colors.bg,
+    borderTopColor: colors.border,
+    borderTopWidth: 1,
+    height: TAB_BAR_HEIGHT,
+    paddingBottom: 8,
+    paddingTop: 8,
+  };
 
   return (
     <Tab.Navigator
@@ -62,14 +73,7 @@ function MainTabs() {
         },
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textMuted,
-        tabBarStyle: {
-          backgroundColor: colors.card,
-          borderTopColor: colors.border,
-          borderTopWidth: 1,
-          height: 60,
-          paddingBottom: 8,
-          paddingTop: 8,
-        },
+        tabBarStyle,
         tabBarLabelStyle: { fontWeight: '600', fontSize: 12 },
         tabBarShowLabel: true,
         headerStyle: { backgroundColor: colors.bg },
@@ -95,7 +99,7 @@ function MainTabs() {
           return {
             title: 'More',
             headerShown: false,
-            tabBarStyle: routeName === 'Admin' ? { display: 'none' } : undefined,
+            tabBarStyle: routeName === 'Admin' ? { ...tabBarStyle, display: 'none' } : tabBarStyle,
           };
         }}
       />

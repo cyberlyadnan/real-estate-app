@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar, Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
@@ -15,14 +15,17 @@ import { AuthProvider } from './src/contexts/AuthContext';
 import AppNavigator from './src/navigation/AppNavigator';
 
 function AppContent() {
-  const { theme } = useTheme();
+  const { theme, colors } = useTheme();
   const isDark = theme === 'dark';
+  // Status bar: dark theme = dark bar + light text; light theme = light bar + dark text
+  const statusBarStyle = isDark ? 'light-content' : 'dark-content';
+  const statusBarBg = Platform.OS === 'android' ? colors.bg : undefined;
 
   return (
-    <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right', 'bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }} edges={['top', 'left', 'right', 'bottom']}>
       <StatusBar
-        barStyle={isDark ? 'light-content' : 'dark-content'}
-        backgroundColor="transparent"
+        barStyle={statusBarStyle}
+        backgroundColor={statusBarBg}
       />
       <AppNavigator />
     </SafeAreaView>
