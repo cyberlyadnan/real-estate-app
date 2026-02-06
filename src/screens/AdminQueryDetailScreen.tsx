@@ -17,6 +17,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../contexts/ThemeContext';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import AppHeader from '../components/AppHeader';
 import * as AdminApi from '../api/admin';
 
 const STATUS_OPTIONS = ['new', 'in_progress', 'resolved', 'closed'];
@@ -131,20 +132,25 @@ export default function AdminQueryDetailScreen() {
 
   if (loading || !query) {
     return (
-      <View style={[styles.center, { backgroundColor: colors.bg }]}>
-        <ActivityIndicator size="large" color={colors.primary} />
-        <Text style={[styles.loadingText, { color: colors.textMuted }]}>Loading...</Text>
-      </View>
+      <>
+        <AppHeader onBack={() => navigation.goBack()} title="Query Details" />
+        <View style={[styles.center, { backgroundColor: colors.bg }]}>
+          <ActivityIndicator size="large" color={colors.primary} />
+          <Text style={[styles.loadingText, { color: colors.textMuted }]}>Loading...</Text>
+        </View>
+      </>
     );
   }
 
   return (
-    <ScrollView
-      style={[styles.container, { backgroundColor: colors.bg }]}
-      contentContainerStyle={styles.content}
-      keyboardShouldPersistTaps="handled"
-    >
-      {/* Header card */}
+    <>
+      <AppHeader onBack={() => navigation.goBack()} title="Query Details" />
+      <ScrollView
+        style={[styles.container, { backgroundColor: colors.bg }]}
+        contentContainerStyle={styles.content}
+        keyboardShouldPersistTaps="handled"
+      >
+        {/* Header card */}
       <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <Text style={[styles.name, { color: colors.text }]}>{query.name}</Text>
         <TouchableOpacity onPress={openEmail} style={styles.contactRow}>
@@ -240,7 +246,8 @@ export default function AdminQueryDetailScreen() {
         <Icon name="delete-outline" size={22} color={colors.error} />
         <Text style={[styles.deleteBtnText, { color: colors.error }]}>Delete Query</Text>
       </TouchableOpacity>
-    </ScrollView>
+      </ScrollView>
+    </>
   );
 }
 

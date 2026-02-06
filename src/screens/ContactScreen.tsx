@@ -18,6 +18,8 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../contexts/ThemeContext';
+import { useNavigation } from '@react-navigation/native';
+import AppHeader from '../components/AppHeader';
 import { submitQuery } from '../api/queries';
 
 const SUBJECT_OPTIONS = [
@@ -31,6 +33,7 @@ const SUBJECT_OPTIONS = [
 
 export default function ContactScreen() {
   const { colors } = useTheme();
+  const navigation = useNavigation<any>();
   const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
   const [submitting, setSubmitting] = useState(false);
 
@@ -94,6 +97,7 @@ export default function ContactScreen() {
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <AppHeader onBack={() => navigation.goBack()} title="Contact" />
       <ScrollView
         style={[styles.container, { backgroundColor: colors.bg }]}
         contentContainerStyle={styles.content}

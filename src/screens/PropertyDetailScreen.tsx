@@ -25,6 +25,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Video from 'react-native-video';
 import { useTheme } from '../contexts/ThemeContext';
 import { useRoute, useNavigation } from '@react-navigation/native';
+import AppHeader from '../components/AppHeader';
 import { fetchPropertyBySlug } from '../api/properties';
 import { getUploadBase } from '../api/config';
 import { submitQuery } from '../api/queries';
@@ -191,7 +192,8 @@ export default function PropertyDetailScreen() {
         <Icon name="alert-circle" size={48} color={colors.textMuted} />
         <Text style={[styles.errorText, { color: colors.text }]}>Property not found</Text>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <Text style={styles.backBtnText}>Go Back</Text>
+          <Icon name="chevron-left" size={28} color={colors.primary} />
+          <Text style={[styles.backBtnText, { color: colors.text }]}>Go Back</Text>
         </TouchableOpacity>
       </View>
     );
@@ -204,6 +206,7 @@ export default function PropertyDetailScreen() {
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <AppHeader onBack={() => navigation.goBack()} title={property.name ? undefined : 'Property'} />
       <ScrollView
         style={[styles.container, { backgroundColor: colors.bg }]}
         contentContainerStyle={styles.content}
@@ -584,13 +587,16 @@ const styles = StyleSheet.create({
   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   errorText: { fontSize: 18, marginTop: 16 },
   backBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
     marginTop: 24,
     paddingVertical: 12,
     paddingHorizontal: 24,
     backgroundColor: '#D4AF37',
     borderRadius: 12,
   },
-  backBtnText: { fontSize: 16, fontWeight: '700', color: '#111827' },
+  backBtnText: { fontSize: 16, fontWeight: '700' },
   galleryWrap: { position: 'relative', marginBottom: SECTION_SPACING, height: 300 },
   mainImage: { width, height: 300 },
   pageIndicator: {

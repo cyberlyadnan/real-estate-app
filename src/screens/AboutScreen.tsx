@@ -6,6 +6,8 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../contexts/ThemeContext';
+import { useNavigation } from '@react-navigation/native';
+import AppHeader from '../components/AppHeader';
 
 const STATS = [
   { icon: 'trending-up', value: 'AED 50B+', label: 'Assets Under Management' },
@@ -34,14 +36,17 @@ const CORE_VALUES = [
 
 export default function AboutScreen() {
   const { colors } = useTheme();
+  const navigation = useNavigation<any>();
 
   return (
-    <ScrollView
-      style={[styles.container, { backgroundColor: colors.bg }]}
-      contentContainerStyle={styles.content}
-      showsVerticalScrollIndicator={false}
-    >
-      {/* Hero */}
+    <>
+      <AppHeader onBack={() => navigation.goBack()} title="About Us" />
+      <ScrollView
+        style={[styles.container, { backgroundColor: colors.bg }]}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Hero */}
       <View style={[styles.hero, { backgroundColor: colors.primary + '12' }]}>
         <View style={[styles.heroIcon, { backgroundColor: colors.primary }]}>
           <Icon name="domain" size={44} color="#fff" />
@@ -154,6 +159,7 @@ export default function AboutScreen() {
         <Text style={[styles.ctaPhone, { color: colors.primary }]}>+971 50 123 4567</Text>
       </View>
     </ScrollView>
+    </>
   );
 }
 

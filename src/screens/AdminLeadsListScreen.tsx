@@ -173,7 +173,7 @@ export default function AdminLeadsListScreen() {
       {/* Compact header */}
       <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-          <Icon name="arrow-left" size={24} color={colors.primary} />
+          <Icon name="chevron-left" size={28} color={colors.primary} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: colors.text }]}>All Leads</Text>
         <TouchableOpacity

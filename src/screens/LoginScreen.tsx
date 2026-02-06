@@ -17,6 +17,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../contexts/ThemeContext';
+import AppHeader from '../components/AppHeader';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function LoginScreen() {
@@ -50,13 +51,7 @@ export default function LoginScreen() {
       style={[styles.container, { backgroundColor: colors.bg }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <TouchableOpacity
-        style={[styles.backBtn, { borderColor: colors.border }]}
-        onPress={() => navigation.goBack()}
-      >
-        <Icon name="arrow-left" size={24} color={colors.text} />
-        <Text style={[styles.backBtnText, { color: colors.text }]}>Back</Text>
-      </TouchableOpacity>
+      <AppHeader onBack={() => navigation.goBack()} title="Admin Login" />
       <View style={styles.inner}>
         <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
           <View style={[styles.logoWrap, { backgroundColor: colors.primary }]}>

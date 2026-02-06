@@ -13,21 +13,26 @@ import {
   Switch,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../contexts/ThemeContext';
+import AppHeader from '../components/AppHeader';
 
 export default function SettingsScreen() {
   const { colors, theme, themeMode, setThemeMode, toggleTheme } = useTheme();
+  const navigation = useNavigation<any>();
 
   const themeLabel =
     themeMode === 'system' ? 'System' : themeMode === 'light' ? 'Light' : 'Dark';
 
   return (
-    <ScrollView
-      style={[styles.container, { backgroundColor: colors.bg }]}
-      contentContainerStyle={styles.content}
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={[styles.hero, { backgroundColor: colors.primary + '15' }]}>
+    <>
+      <AppHeader onBack={() => navigation.goBack()} title="Settings" />
+      <ScrollView
+        style={[styles.container, { backgroundColor: colors.bg }]}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={[styles.hero, { backgroundColor: colors.primary + '15' }]}>
         <Icon name="cog" size={40} color={colors.primary} />
         <Text style={[styles.title, { color: colors.text }]}>Settings</Text>
         <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
@@ -123,7 +128,8 @@ export default function SettingsScreen() {
           Luxury Real Estate – Browse premium properties in Dubai & UAE
         </Text>
       </View>
-    </ScrollView>
+      </ScrollView>
+    </>
   );
 }
 

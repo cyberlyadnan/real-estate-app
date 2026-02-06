@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../contexts/ThemeContext';
+import AppHeader from '../components/AppHeader';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import * as AdminApi from '../api/admin';
 
@@ -254,13 +255,7 @@ export default function AdminLeadDetailScreen() {
       contentContainerStyle={styles.content}
       keyboardShouldPersistTaps="handled"
     >
-      <TouchableOpacity
-        style={[styles.backRow, { borderBottomColor: colors.border }]}
-        onPress={() => navigation.goBack()}
-      >
-        <Icon name="arrow-left" size={24} color={colors.primary} />
-        <Text style={[styles.backText, { color: colors.primary }]}>Back to Leads</Text>
-      </TouchableOpacity>
+      <AppHeader onBack={() => navigation.goBack()} title="Lead Details" />
       {/* Header card */}
       <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <Text style={[styles.name, { color: colors.text }]}>{lead.name}</Text>

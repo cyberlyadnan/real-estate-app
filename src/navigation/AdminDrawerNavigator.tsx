@@ -258,7 +258,7 @@ export default function AdminDrawerNavigator() {
             style={styles.headerBtn}
             hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
           >
-            <Icon name="arrow-left" size={26} color={colors.primary} />
+            <Icon name="chevron-left" size={28} color={colors.primary} />
           </TouchableOpacity>
         ),
         headerRight: () => (

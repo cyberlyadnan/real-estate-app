@@ -16,6 +16,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../contexts/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
+import AppHeader from '../components/AppHeader';
 import * as AdminApi from '../api/admin';
 
 const SOURCE_OPTIONS = [
@@ -85,18 +86,7 @@ export default function AdminLeadFormScreen() {
       contentContainerStyle={styles.content}
       keyboardShouldPersistTaps="handled"
     >
-      {/* <TouchableOpacity
-        style={[styles.backRow, { borderBottomColor: colors.border }]}
-        onPress={() => navigation.goBack()}
-      >
-        <Icon name="arrow-left" size={24} color={colors.primary} />
-        <Text style={[styles.backText, { color: colors.primary }]}>Back to Leads</Text>
-      </TouchableOpacity> */}
-      {/* <View style={styles.header}>
-        <Icon name="account-plus" size={32} color={colors.primary} />
-        <Text style={[styles.headerTitle, { color: colors.text }]}>Add New Lead</Text>
-        <Text style={[styles.headerSub, { color: colors.textMuted }]}>Manually add a lead to the CRM</Text>
-      </View> */}
+      <AppHeader onBack={() => navigation.goBack()} title="Add Lead" />
 
       <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <Text style={[styles.sectionTitle, { color: colors.text }]}>Contact Info</Text>
