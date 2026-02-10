@@ -248,17 +248,18 @@ export default function HomeScreen() {
       </TouchableOpacity>
 
       {/* CTA */}
-      <View style={[styles.cta, { backgroundColor: colors.primary + '15', borderColor: colors.primary + '40' }]}>
+      <View style={[styles.cta, { backgroundColor: colors.primary + '18', borderColor: colors.primary + '50' }]}>
         <Text style={[styles.ctaTitle, { color: colors.text }]}>Ready to invest?</Text>
         <Text style={[styles.ctaSub, { color: colors.textSecondary }]}>
           Browse our full portfolio of premium properties
         </Text>
         <TouchableOpacity
-          style={styles.ctaBtn}
+          style={[styles.ctaBtn, { backgroundColor: colors.primary, borderColor: colors.primaryDark }]}
           onPress={() => navigation.navigate('Properties')}
+          activeOpacity={0.85}
         >
-          <Text style={styles.ctaBtnText}>Explore Properties</Text>
-          <Icon name="arrow-right" size={20} color="#111827" />
+          <Text style={styles.ctaBtnText}>View All Properties</Text>
+          <Icon name="arrow-right" size={20} color="#1a1a1a" />
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -420,11 +421,11 @@ const styles = StyleSheet.create({
   ctaBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#D4AF37',
     paddingVertical: 14,
-    paddingHorizontal: 24,
+    paddingHorizontal: 28,
     borderRadius: 12,
+    borderWidth: 2,
     gap: 10,
   },
-  ctaBtnText: { fontSize: 16, fontWeight: '700', color: '#111827' },
+  ctaBtnText: { fontSize: 16, fontWeight: '700', color: '#1a1a1a' },
 });

@@ -3,7 +3,7 @@
  * Professional, modern layout matching frontend admin
  */
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import {
   RefreshControl,
   ActivityIndicator,
   Platform,
+  Animated,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../contexts/ThemeContext';
@@ -48,6 +49,30 @@ function StatCard({
   );
 }
 
+function formatDueDate(s: string | null | undefined) {
+  if (!s) return '—';
+  const d = new Date(s);
+  return d.toLocaleDateString(undefined, { dateStyle: 'short' }) + ' ' + d.toLocaleTimeString(undefined, { timeStyle: 'short' });
+}
+
+/** Blinking accent bar for due-leads callout */
+function BlinkingAccent({ colors }: { colors: Record<string, string> }) {
+  const pulse = useRef(new Animated.Value(0.5)).current;
+  useEffect(() => {
+    const anim = Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulse, { toValue: 1, duration: 600, useNativeDriver: true }),
+        Animated.timing(pulse, { toValue: 0.5, duration: 600, useNativeDriver: true }),
+      ])
+    );
+    anim.start();
+    return () => anim.stop();
+  }, [pulse]);
+  return (
+    <Animated.View style={[styles.dueLeadsAccent, { backgroundColor: colors.error }, { opacity: pulse }]} />
+  );
+}
+
 export default function AdminDashboardScreen() {
   const { colors } = useTheme();
   const { user } = useAuth();
@@ -55,18 +80,31 @@ export default function AdminDashboardScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [stats, setStats] = useState<AdminApi.LeadStats | null>(null);
+  const [dueLeadsAlerts, setDueLeadsAlerts] = useState<{
+    overdueLeads: AdminApi.LeadItem[];
+    upcomingLeads: AdminApi.LeadItem[];
+  } | null>(null);
   const [recentLeads, setRecentLeads] = useState<any[]>([]);
   const [recentProperties, setRecentProperties] = useState<any[]>([]);
   const [propertiesTotal, setPropertiesTotal] = useState(0);
 
   const load = useCallback(async () => {
     try {
-      const [statsRes, leadsRes, propsRes] = await Promise.all([
+      const [statsRes, alertsRes, leadsRes, propsRes] = await Promise.all([
         AdminApi.getLeadStats(),
+        AdminApi.getLeadAlerts(),
         AdminApi.getLeads({ limit: 5 }),
         AdminApi.getProperties({ limit: 5 }),
       ]);
       if (statsRes.success && statsRes.data) setStats(statsRes.data);
+      if (alertsRes.success && alertsRes.data) {
+        setDueLeadsAlerts({
+          overdueLeads: alertsRes.data.overdueLeads || [],
+          upcomingLeads: alertsRes.data.upcomingLeads || [],
+        });
+      } else {
+        setDueLeadsAlerts(null);
+      }
       if (leadsRes.success && leadsRes.data) setRecentLeads(leadsRes.data);
       if (propsRes.success) {
         setRecentProperties(propsRes.data || []);
@@ -75,6 +113,7 @@ export default function AdminDashboardScreen() {
       }
     } catch {
       setStats(null);
+      setDueLeadsAlerts(null);
       setRecentLeads([]);
       setRecentProperties([]);
     } finally {
@@ -127,6 +166,68 @@ export default function AdminDashboardScreen() {
           <Icon name="account" size={28} color="#fff" />
         </View>
       </View>
+
+      {/* Due leads – instant action needed (highlighted + blinking) */}
+      {dueLeadsAlerts && (dueLeadsAlerts.overdueLeads.length > 0 || dueLeadsAlerts.upcomingLeads.length > 0) && (
+        <View style={[styles.dueLeadsCard, { backgroundColor: colors.error + '12', borderColor: colors.error }]}>
+          <BlinkingAccent colors={colors} />
+          <View style={styles.dueLeadsContent}>
+            <View style={styles.dueLeadsHeader}>
+              <Icon name="alert-circle" size={22} color={colors.error} />
+              <Text style={[styles.dueLeadsTitle, { color: colors.error }]}>Action needed</Text>
+              <View style={[styles.dueLeadsBadge, { backgroundColor: colors.error }]}>
+                <Text style={styles.dueLeadsBadgeText}>
+                  {dueLeadsAlerts.overdueLeads.length + dueLeadsAlerts.upcomingLeads.length} due
+                </Text>
+              </View>
+            </View>
+            <Text style={[styles.dueLeadsSub, { color: colors.textSecondary }]}>
+              Follow up on these leads
+            </Text>
+            {dueLeadsAlerts.overdueLeads.slice(0, 4).map((l) => (
+              <TouchableOpacity
+                key={l._id}
+                style={[styles.dueLeadRow, { borderColor: colors.border }]}
+                onPress={() => navigation.navigate('Leads', { screen: 'LeadDetail', params: { leadId: l._id } })}
+                activeOpacity={0.8}
+              >
+                <Icon name="alert-circle" size={18} color={colors.error} />
+                <View style={styles.dueLeadInfo}>
+                  <Text style={[styles.dueLeadName, { color: colors.text }]} numberOfLines={1}>{l.name}</Text>
+                  <Text style={[styles.dueLeadMeta, { color: colors.error }]}>
+                    Overdue · {formatDueDate(l.nextFollowUpAt)}
+                  </Text>
+                </View>
+                <Icon name="chevron-right" size={20} color={colors.textMuted} />
+              </TouchableOpacity>
+            ))}
+            {dueLeadsAlerts.upcomingLeads.slice(0, 4).map((l) => (
+              <TouchableOpacity
+                key={l._id}
+                style={[styles.dueLeadRow, { borderColor: colors.border }]}
+                onPress={() => navigation.navigate('Leads', { screen: 'LeadDetail', params: { leadId: l._id } })}
+                activeOpacity={0.8}
+              >
+                <Icon name="calendar-clock" size={18} color={colors.warning} />
+                <View style={styles.dueLeadInfo}>
+                  <Text style={[styles.dueLeadName, { color: colors.text }]} numberOfLines={1}>{l.name}</Text>
+                  <Text style={[styles.dueLeadMeta, { color: colors.textSecondary }]}>
+                    Due · {formatDueDate(l.nextFollowUpAt)}
+                  </Text>
+                </View>
+                <Icon name="chevron-right" size={20} color={colors.textMuted} />
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity
+              style={[styles.dueLeadsCta, { backgroundColor: colors.error + '25' }]}
+              onPress={() => navigation.navigate('Leads', { screen: 'DueLeads' })}
+            >
+              <Text style={[styles.dueLeadsCtaText, { color: colors.error }]}>Open due leads</Text>
+              <Icon name="arrow-right" size={18} color={colors.error} />
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
 
       {/* Stats */}
       <View style={styles.statsGrid}>
@@ -359,4 +460,61 @@ const styles = StyleSheet.create({
   },
   emptyText: { fontSize: 15, fontWeight: '600', marginTop: 12 },
   emptySub: { fontSize: 13, marginTop: 4 },
+  dueLeadsCard: {
+    marginBottom: 16,
+    borderRadius: 16,
+    borderWidth: 2,
+    overflow: 'hidden',
+    flexDirection: 'row',
+    ...Platform.select({
+      ios: { shadowColor: '#EF4444', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.15, shadowRadius: 8 },
+      android: { elevation: 4 },
+    }),
+  },
+  dueLeadsAccent: {
+    width: 5,
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+  },
+  dueLeadsContent: { flex: 1, padding: 16, paddingLeft: 20 },
+  dueLeadsHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 4,
+  },
+  dueLeadsTitle: { fontSize: 17, fontWeight: '800', letterSpacing: 0.3 },
+  dueLeadsBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 999,
+    marginLeft: 'auto',
+  },
+  dueLeadsBadgeText: { fontSize: 12, fontWeight: '800', color: '#fff' },
+  dueLeadsSub: { fontSize: 13, marginBottom: 12 },
+  dueLeadRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    marginBottom: 8,
+    gap: 10,
+  },
+  dueLeadInfo: { flex: 1, minWidth: 0 },
+  dueLeadName: { fontSize: 15, fontWeight: '600' },
+  dueLeadMeta: { fontSize: 12, marginTop: 2 },
+  dueLeadsCta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    borderRadius: 12,
+    marginTop: 8,
+    gap: 8,
+  },
+  dueLeadsCtaText: { fontSize: 14, fontWeight: '700' },
 });

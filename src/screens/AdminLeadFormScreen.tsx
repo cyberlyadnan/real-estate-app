@@ -16,7 +16,6 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../contexts/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
-import AppHeader from '../components/AppHeader';
 import * as AdminApi from '../api/admin';
 
 const SOURCE_OPTIONS = [
@@ -86,7 +85,9 @@ export default function AdminLeadFormScreen() {
       contentContainerStyle={styles.content}
       keyboardShouldPersistTaps="handled"
     >
-      <AppHeader onBack={() => navigation.goBack()} title="Add Lead" />
+      <View style={[styles.toolbar, { borderBottomColor: colors.border }]}>
+        <Text style={[styles.toolbarSub, { color: colors.textSecondary }]}>New lead</Text>
+      </View>
 
       <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <Text style={[styles.sectionTitle, { color: colors.text }]}>Contact Info</Text>
@@ -252,6 +253,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   backText: { fontSize: 16, fontWeight: '600' },
+  toolbar: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+  },
+  toolbarSub: { fontSize: 14, fontWeight: '500' },
   header: {
     alignItems: 'center',
     paddingVertical: 20,

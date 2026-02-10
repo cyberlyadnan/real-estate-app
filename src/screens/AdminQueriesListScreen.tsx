@@ -205,9 +205,8 @@ export default function AdminQueriesListScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.bg }]}>
-      <View style={styles.header}>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>Query Manager</Text>
-        <Text style={[styles.headerSub, { color: colors.textMuted }]}>Track and manage contact submissions</Text>
+      <View style={[styles.toolbar, { borderBottomColor: colors.border }]}>
+        <Text style={[styles.toolbarSub, { color: colors.textSecondary }]}>Track and manage contact submissions</Text>
       </View>
       {/* Search & Filters */}
       <View style={[styles.filtersCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
@@ -321,9 +320,8 @@ export default function AdminQueriesListScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  header: { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 4 },
-  headerTitle: { fontSize: 20, fontWeight: '800' },
-  headerSub: { fontSize: 14, marginTop: 4 },
+  toolbar: { paddingHorizontal: 16, paddingVertical: 10, borderBottomWidth: 1 },
+  toolbarSub: { fontSize: 14, fontWeight: '500' },
   filtersCard: {
     margin: 16,
     padding: 16,

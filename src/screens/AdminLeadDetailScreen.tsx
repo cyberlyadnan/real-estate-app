@@ -16,7 +16,6 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../contexts/ThemeContext';
-import AppHeader from '../components/AppHeader';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import * as AdminApi from '../api/admin';
 
@@ -255,7 +254,9 @@ export default function AdminLeadDetailScreen() {
       contentContainerStyle={styles.content}
       keyboardShouldPersistTaps="handled"
     >
-      <AppHeader onBack={() => navigation.goBack()} title="Lead Details" />
+      <View style={[styles.toolbar, { borderBottomColor: colors.border }]}>
+        <Text style={[styles.toolbarSub, { color: colors.textSecondary }]}>Lead details</Text>
+      </View>
       {/* Header card */}
       <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <Text style={[styles.name, { color: colors.text }]}>{lead.name}</Text>
@@ -552,6 +553,8 @@ export default function AdminLeadDetailScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   content: { padding: 16, paddingBottom: 40 },
+  toolbar: { paddingHorizontal: 16, paddingVertical: 10, borderBottomWidth: 1 },
+  toolbarSub: { fontSize: 14, fontWeight: '500' },
   backRow: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -151,6 +151,19 @@ export default function AdminLeadOverviewScreen() {
           {/* Actions */}
           <View style={styles.actions}>
             <TouchableOpacity
+              style={[styles.dueLeadsBtn, { backgroundColor: colors.error + '18', borderColor: colors.error }]}
+              onPress={() => navigation.navigate('DueLeads')}
+            >
+              <Icon name="calendar-alert" size={24} color={colors.error} />
+              <View style={styles.btnTextWrap}>
+                <Text style={[styles.dueLeadsBtnText, { color: colors.error }]}>Due leads</Text>
+                <Text style={[styles.dueLeadsBtnSub, { color: colors.textSecondary }]}>
+                  Overdue & due today · Filter & act
+                </Text>
+              </View>
+              <Icon name="chevron-right" size={24} color={colors.error} />
+            </TouchableOpacity>
+            <TouchableOpacity
               style={[styles.primaryBtn, { backgroundColor: colors.primary }]}
               onPress={() => navigation.navigate('LeadList')}
             >
@@ -211,6 +224,16 @@ const styles = StyleSheet.create({
   alertName: { flex: 1, fontSize: 14, fontWeight: '600' },
   alertDate: { fontSize: 11 },
   actions: { gap: 12 },
+  dueLeadsBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 18,
+    borderRadius: 14,
+    borderWidth: 2,
+    gap: 16,
+  },
+  dueLeadsBtnText: { fontSize: 16, fontWeight: '700' },
+  dueLeadsBtnSub: { fontSize: 13, marginTop: 2 },
   primaryBtn: {
     flexDirection: 'row',
     alignItems: 'center',

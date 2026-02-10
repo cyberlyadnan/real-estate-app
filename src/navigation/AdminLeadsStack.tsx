@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useTheme } from '../contexts/ThemeContext';
 import AdminLeadOverviewScreen from '../screens/AdminLeadOverviewScreen';
 import AdminLeadsListScreen from '../screens/AdminLeadsListScreen';
+import AdminDueLeadsScreen from '../screens/AdminDueLeadsScreen';
 import AdminLeadDetailScreen from '../screens/AdminLeadDetailScreen';
 import AdminLeadFormScreen from '../screens/AdminLeadFormScreen';
 
@@ -35,6 +36,11 @@ export default function AdminLeadsStack() {
         name="LeadList"
         component={AdminLeadsListScreen}
         options={{ title: 'All Leads', headerShown: false }}
+      />
+      <Stack.Screen
+        name="DueLeads"
+        component={AdminDueLeadsScreen}
+        options={{ title: 'Due Leads', headerShown: false }}
       />
       <Stack.Screen
         name="LeadDetail"

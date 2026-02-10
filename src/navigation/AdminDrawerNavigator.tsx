@@ -6,7 +6,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Dimensions } from 'react-native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerContentComponentProps } from '@react-navigation/drawer';
-import { DrawerActions, CommonActions } from '@react-navigation/native';
+import { DrawerActions, CommonActions, getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -284,17 +284,29 @@ export default function AdminDrawerNavigator() {
       <Drawer.Screen
         name="Properties"
         component={AdminPropertiesStack}
-        options={{ title: 'Properties', headerStatusBarHeight: 0, drawerPosition: 'right' }}
+        options={({ route }) => {
+          const focused = getFocusedRouteNameFromRoute(route) ?? 'PropertyList';
+          const title = focused === 'PropertyAdd' ? 'Add Property' : focused === 'PropertyEdit' ? 'Edit Property' : 'Properties';
+          return { title, headerStatusBarHeight: 0, drawerPosition: 'right' };
+        }}
       />
       <Drawer.Screen
         name="Leads"
         component={AdminLeadsStack}
-        options={{ title: 'Leads', headerStatusBarHeight: 0, drawerPosition: 'right' }}
+        options={({ route }) => {
+          const focused = getFocusedRouteNameFromRoute(route) ?? 'LeadOverview';
+          const title = focused === 'DueLeads' ? 'Due Leads' : focused === 'LeadDetail' ? 'Lead' : focused === 'LeadForm' ? 'Add Lead' : focused === 'LeadList' ? 'All Leads' : 'Leads';
+          return { title, headerStatusBarHeight: 0, drawerPosition: 'right' };
+        }}
       />
       <Drawer.Screen
         name="Queries"
         component={AdminQueriesStack}
-        options={{ title: 'Queries', headerStatusBarHeight: 0, drawerPosition: 'right' }}
+        options={({ route }) => {
+          const focused = getFocusedRouteNameFromRoute(route) ?? 'QueryList';
+          const title = focused === 'QueryDetail' ? 'Query' : 'Queries';
+          return { title, headerStatusBarHeight: 0, drawerPosition: 'right' };
+        }}
       />
       <Drawer.Screen
         name="Settings"

@@ -170,12 +170,9 @@ export default function AdminLeadsListScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.bg }]}>
-      {/* Compact header */}
-      <View style={[styles.header, { borderBottomColor: colors.border }]}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-          <Icon name="chevron-left" size={28} color={colors.primary} />
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>All Leads</Text>
+      {/* Toolbar: subtitle + Add (no back – drawer header is the only header) */}
+      <View style={[styles.toolbar, { borderBottomColor: colors.border }]}>
+        <Text style={[styles.toolbarSub, { color: colors.textSecondary }]}>Search & filter below</Text>
         <TouchableOpacity
           style={[styles.addBtn, { backgroundColor: colors.primary }]}
           onPress={() => navigation.navigate('LeadForm')}
@@ -185,7 +182,7 @@ export default function AdminLeadsListScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Compact search + filter */}
+      {/* Search + filter */}
       <View style={[styles.filterBar, { backgroundColor: colors.bg, borderBottomColor: colors.border }]}>
         <View style={[styles.searchWrap, { backgroundColor: colors.card, borderColor: colors.border }]}>
           <Icon name="magnify" size={20} color={colors.textMuted} />
@@ -296,15 +293,15 @@ export default function AdminLeadsListScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  header: {
+  toolbar: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 12,
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
     borderBottomWidth: 1,
   },
-  backBtn: { padding: 4, marginRight: 8 },
-  headerTitle: { flex: 1, fontSize: 18, fontWeight: '700' },
+  toolbarSub: { fontSize: 14, fontWeight: '500' },
   addBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 10 },
   addBtnText: { color: '#fff', fontSize: 14, fontWeight: '700' },
   filterBar: {
@@ -338,7 +335,7 @@ const styles = StyleSheet.create({
   },
   filterToggleText: { fontSize: 13, fontWeight: '600' },
   filterPanel: {
-    paddingHorizontal: 12,
+    paddingHorizontal: 20,
     paddingVertical: 12,
     borderBottomWidth: 1,
     gap: 10,

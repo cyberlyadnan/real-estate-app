@@ -17,7 +17,6 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../contexts/ThemeContext';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import AppHeader from '../components/AppHeader';
 import * as AdminApi from '../api/admin';
 
 const STATUS_OPTIONS = ['new', 'in_progress', 'resolved', 'closed'];
@@ -133,7 +132,9 @@ export default function AdminQueryDetailScreen() {
   if (loading || !query) {
     return (
       <>
-        <AppHeader onBack={() => navigation.goBack()} title="Query Details" />
+        <View style={[styles.toolbar, { borderBottomColor: colors.border }]}>
+          <Text style={[styles.toolbarSub, { color: colors.textSecondary }]}>Query details</Text>
+        </View>
         <View style={[styles.center, { backgroundColor: colors.bg }]}>
           <ActivityIndicator size="large" color={colors.primary} />
           <Text style={[styles.loadingText, { color: colors.textMuted }]}>Loading...</Text>
@@ -144,7 +145,9 @@ export default function AdminQueryDetailScreen() {
 
   return (
     <>
-      <AppHeader onBack={() => navigation.goBack()} title="Query Details" />
+      <View style={[styles.toolbar, { borderBottomColor: colors.border }]}>
+        <Text style={[styles.toolbarSub, { color: colors.textSecondary }]}>Query details</Text>
+      </View>
       <ScrollView
         style={[styles.container, { backgroundColor: colors.bg }]}
         contentContainerStyle={styles.content}
@@ -254,6 +257,8 @@ export default function AdminQueryDetailScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   content: { padding: 16, paddingBottom: 40 },
+  toolbar: { paddingHorizontal: 16, paddingVertical: 10, borderBottomWidth: 1 },
+  toolbarSub: { fontSize: 14, fontWeight: '500' },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 },
   loadingText: { fontSize: 15 },
   card: {
