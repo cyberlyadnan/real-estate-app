@@ -29,6 +29,7 @@ import AppHeader from '../components/AppHeader';
 import { fetchPropertyBySlug } from '../api/properties';
 import { getUploadBase } from '../api/config';
 import { submitQuery } from '../api/queries';
+import { trackPropertyView } from '../api/analytics';
 
 interface PropertyDetail {
   _id: string;
@@ -131,7 +132,10 @@ export default function PropertyDetailScreen() {
     (async () => {
       try {
         const p = await fetchPropertyBySlug(slug);
-        if (!cancelled) setProperty(p);
+        if (!cancelled) {
+          setProperty(p);
+          if (p?._id && p?.slug) trackPropertyView(p._id, p.slug);
+        }
       } catch {
         if (!cancelled) setProperty(null);
       } finally {
